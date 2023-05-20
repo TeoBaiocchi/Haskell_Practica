@@ -151,24 +151,19 @@ calcular :: Bin -> Int -> Int
 calcular (N H) _ = 0
 calcular (N i c H) 0 = 1
 calcular (N H c d) 0 = 1
-calcular (N i c d) 0 = 2
 calcular (N i c d) x = calcular i (x-1) + calcular d (x-1) 
+-- Nota, lo dejo para claridad, pero los dos casos que devuelven 1
+-- pueden simplificarse con _ 0 = 1 ya que no importa donde tengan la hoja.
+
 
 --b)
-
 getHeight (Nodo Hoja _ Hoja) = 0
 getHeight (Nodo l _ Hoja) = getHeight l + 1
 getHeight (Nodo Hoja _ r) = getHeight r + 1
-getHeight (Nodo l _ r) = 
-    if lh <= rh
-    then rh + 1
-    else lh + 1
-    where lh = getHeight l
-          rh = getHeight r
-
-balanced (Nodo l c r) = let lh = getHeight l
-                            rh = getHeight r
-                        in abs(lh - rh) <= 1 
+getHeight (Nodo l _ r) = if lh <= rh then (getHeight r) + 1 else (getHeight l) + 1
+ 
+balanced Hoja = True
+balanced (Nodo l c r) = abs(getHeight l - getHeight r) <= 1 && (balanced l) && (balanced r)
                           
 
 
