@@ -160,12 +160,14 @@ calcular (N i c d) x = calcular i (x-1) + calcular d (x-1)
 getHeight (Nodo Hoja _ Hoja) = 0
 getHeight (Nodo l _ Hoja) = getHeight l + 1
 getHeight (Nodo Hoja _ r) = getHeight r + 1
-getHeight (Nodo l _ r) = if lh <= rh then (getHeight r) + 1 else (getHeight l) + 1
+getHeight (Nodo l _ r) = if lHeight <= rHeight then rHeight + 1 else lHeight + 1
+							where 
+							lHeight = getHeight l
+							rHeight = getHeight r
  
 balanced Hoja = True
 balanced (Nodo l c r) = abs(getHeight l - getHeight r) <= 1 && (balanced l) && (balanced r)
                           
-
 
 {-
 -}

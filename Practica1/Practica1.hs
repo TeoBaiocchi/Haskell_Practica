@@ -1,4 +1,38 @@
 {-
+2. Dar al menos dos ejemplos de funciones que tengan cada uno de los siguientes tipos:
+a) (Int → Int) → Int
+b) Int → (Int → Int)
+c) (Int → Int) → (Int → Int)
+d) Int → Bool
+e) Bool → (Bool → Bool)
+f) (Int,Char) → Bool
+g) (Int,Int) → Int
+h) Int → (Int,Int)
+i) a → Bool
+j) a → a
+-}
+
+--a)
+ejA :: (Int -> Int) -> Int
+ejA f = f 5
+
+ejA2 :: (Int -> Int) -> Int
+ejA2 f = 4
+
+--b)
+enteroPorDos :: Int -> (Int -> Int)
+enteroPorDos x = g
+			where g x = (x*2)
+
+enteroMasDos :: Int -> (Int -> Int)
+enteroMasDos x = g
+			where g x = (x+2)			
+			
+--c)
+aplicarDosVeces :: (Int -> Int) -> (Int -> Int)
+aplicarDosVeces f = g 
+		where g x = f (f x)
+{-
 3. Reescribir cada una de las siguientes definiciones sin usar let, where o if:
 a) f x = let (y,z) = (x,x) in y
 b) greater (x,y) = if x > y then True else False
