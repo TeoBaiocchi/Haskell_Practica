@@ -39,3 +39,4 @@ delSet a (Set (x:xs)) = if x /= a
 
 unionSet (Set xs) (Set []) = (Set xs)
 unionSet (Set xs) (Set y:ys) = unionSet (addSet y xs) ys
+

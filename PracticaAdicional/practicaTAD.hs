@@ -1,6 +1,7 @@
 {-
 1. Dado el siguiente tipo de dato que representa los n´umeros naturales:
 data Nat = Cero | Succ Nat
+
 a) ¿Qu´e tipo tiene Succ?
 b) Definir la funci´on int2Nat :: Int → Nat que dado un entero retorne su representaci´n en Nat
 Ejemplo int2Nat 4 = Succ (Succ (Succ (Succ Cero)))
@@ -25,7 +26,9 @@ nat2Int :: Nat -> Int
 nat2Int Cero = 0
 nat2Int (Succ x) = 1 + (nat2int x)
 
-{-
+
+{- 
+----------------------------------------
 2. Dado el tipo de datos de ´arboles binarios:
 data Arb = E | H Int | N Arb Arb
 y el tipo de datos de comandos, para navegar el ´arbol:
@@ -48,29 +51,30 @@ ejemplo, ir a la izquierda cuando nos encontramos en una hoja).
 
 c) Definir una funci´on enum :: Arb → [[Cmd]] que devuelva todas las secuencias de comandos
 v´alidas para ir desde la ra´ız hasta una hoja.
-
 -}
 
-data Arb = E | H Int | N Arb Arb deriving show
+data Arb = E | H1 Int | N1 Arb Arb deriving Show
 data Cmd = L | R
 -- a) N :: Arb -> Arb -> Arb
 
 selec :: [Cmd] -> Arb -> Arb
 selec [] x = x
-selec (L:xs) (N d i) = selec xs i
-selec (R:xs) (N d i) = selec xs d 
+selec (L:xs) (N i d) = selec xs i
+selec (R:xs) (N i d) = selec xs d 
 
 enum :: Arb -> [[Cmd]]
-enum (H x) = [[]]
+enum (H1 x) = [[]]
 enum E = [[]]
-enum (N i d) = (agregarInicio (enum i) L) ++ (agregarInicio (enum d) R) 
+enum (N1 i d) = (agregarInicio (enum i) L) ++ (agregarInicio (enum d) R) 
 
 agregarInicio :: [[a]] -> a -> [[a]]
 agregarInicio [] a = []
 agregarInicio (x:xs) a = (a:x):(agregarInicio xs a)
 
+
 {-
-Un lenguaje imperativo simple solo permites variables de un unico tipo, 
+------------------------------------------------
+3. Un lenguaje imperativo simple solo permites variables de un unico tipo, 
 para esto se mantiene un estado con el nombre de las variables y sus valores. 
 Un Estado es una estructura secuencial formada por un nombre de variable y el valor correspondiente. 
 Se requiere las siguientes operaciones sobre Estado :
@@ -96,7 +100,7 @@ Definir los tipo de dato para Nombre y Estado e implementar las operaciones dada
 data Nombre = N [Char] deriving (Eq, Show)
 data Estado a = H | V Nombre a Estado deriving Show
 
-data Maybe a = Nothing | Just a deriving Show
+--data Maybe a = Nothing | Just a deriving Show
 
 inicial :: Estado a
 inicial = H
@@ -114,18 +118,61 @@ free _ H = H
 free nom1 (V nom2 y e) = if nom1 == nom2 then e else (V nom2 y (free nom1 e))
 -- Se asume que el elemento aparece una unica vez
 
+
+
+
 {-
-4. Implementar una funci´on que:
-a) calcule el n´umero de nodos en un nivel espec´ıfico de un ´arbol binario
-b) reciba un ´arbol binario de b´usqueda y verifique si es un ´arbol balanceado, es decir, que la
+-------------------------------------------
+4. Implementar una funcion que:
+
+a) calcule el numero de nodos en un nivel especıfico de un arbol binario
+
+b) reciba un arbol binario de b´usqueda y verifique si es un arbol balanceado, es decir, que la
 diferencia de alturas entre su sub´arbol izquierdo y derecho no sea mayor que 1 para todos
 los nodos
-c) encuentren el sucesor y el predecesor de un valor dado en un ´arbol binario de b´usqueda. El
-sucesor es el valor m´as peque˜no mayor que el valor dado, y el predecesor es el valor m´as
-grande menor que el valor dado
-d) dado un Leftist Heaps, retorne una lista con sus elementos ordenados de mayor a menor
-e) verifique si un ´arbol cumple con la propiedad de Leftist Heap
-f) elimine todos los elementos duplicados en un Leftist Heap y devuelva el nuevo heap resultante
-g) verifique si un ´arbol cumple con la propiedad de Red − Black − Tree
 
+c) encuentren el sucesor y el predecesor de un valor dado en un arbol binario de busqueda. El
+sucesor es el valor mas pequeño mayor que el valor dado, y el predecesor es el valor m´as
+grande menor que el valor dado
+
+d) dado un Leftist Heaps, retorne una lista con sus elementos ordenados de mayor a menor
+
+e) verifique si un arbol cumple con la propiedad de Leftist Heap
+
+f) elimine todos los elementos duplicados en un Leftist Heap y devuelva el nuevo heap resultante
+
+g) verifique si un arbol cumple con la propiedad de Red − Black − Tree
 -}
+
+data Bin a = Hoja | Nodo (Bin a) a (Bin a)
+
+-- a)
+calcular :: Bin -> Int -> Int
+calcular (N H) _ = 0
+calcular (N i c H) 0 = 1
+calcular (N H c d) 0 = 1
+calcular (N i c d) 0 = 2
+calcular (N i c d) x = calcular i (x-1) + calcular d (x-1) 
+
+--b)
+
+getHeight (Nodo Hoja _ Hoja) = 0
+getHeight (Nodo l _ Hoja) = getHeight l + 1
+getHeight (Nodo Hoja _ r) = getHeight r + 1
+getHeight (Nodo l _ r) = 
+    if lh <= rh
+    then rh + 1
+    else lh + 1
+    where lh = getHeight l
+          rh = getHeight r
+
+balanced (Nodo l c r) = let lh = getHeight l
+                            rh = getHeight r
+                        in abs(lh - rh) <= 1 
+                          
+
+
+{-
+-}
+
+
