@@ -135,5 +135,26 @@ suma x:xs = x + (suma xs)
 --d) codes, que dada una lista de caracteres, devuelve la lista de sus ordinales
 -- codes (x:xs) = [] 
  
+{-
+8. Definir las siguientes funciones usando listas por comprensi´on:
+a) divisors, que dado un entero positivo x devuelve la lista de los divisores de x (y la lista vac´ıa si el entero no es positivo).
+b) matches, que dados un entero x y una lista de enteros descarta de la lista los elementos distintos a x.
+c) unique, que dada una lista xs de enteros, devuelve la lista con los elementos no repetidos de xs.
+d) cuadrupla, que dados cuatro enteros a, b, c y d tales que 0 < a, b, c, d, ≤ 100, devuelve las
+cuadruplas (a, b, c, d) que cumplen a2 + b2 = c2 + d2 (al cuadrado)
+-}
+cuadruplas = [(a, b, c, d) | a <- [1.. 100], b <- [1..100], c <- [1..100], d <- [1..100], a*a + b*b == c*c + d*d]
+unique xs = [x | x <- xs]
 
-
+{-
+9. Definir el tipo de datos Direction cuyos valores describan los puntos cardinales. Definir la
+funci´on move que dado un punto en el plano (representado como un par de enteros) y una direcci´on
+devuelva el punto que se obtiene el desplazarse una unidad en dicha direcci´on.
+-}
+data Direccion = N | S | E | O
+type Punto = (Int, Int)
+move :: Punto -> Direccion -> Punto
+move (x, y) N = (x, y+1)
+move (x, y) S = (x, y-1)
+move (x, y) E = (x+1, y)
+move (x, y) O = (x-1, y)

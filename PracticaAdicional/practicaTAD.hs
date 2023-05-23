@@ -196,10 +196,9 @@ memberRBT a (T l b r) | a ≡ b = True
 insert :: Ord a => a -> RBT a -> RBT a
 insert x t = makeBlack (ins x t)
 			 where ins x E = T R E x E
-			
-ins x (T c l y r) | x < y = balance c (ins x l) y r
-				  | x > y = balance c l y (ins x r)
-                  | otherwise = T c l y r
+				   ins x (T c l y r) | x < y = balance c (ins x l) y r
+				                     | x > y = balance c l y (ins x r)
+                                     | otherwise = T c l y r
 makeBlack E = E
 makeBlack (T l x r) = T B l x r
 
@@ -209,6 +208,27 @@ balance B (T R a x (T R b y c)) z d = T R (T B a x b) y (T B c z d)
 balance B a x (T R (T R b y c) z d) = T R (T B a x b) y (T B c z d)
 balance B a x (T R b y (T R c z d)) = T R (T B a x b) y (T B c z d)
 balance c l a r = T c l a r
+
+checkRBT E = True
+checkRBT (T B E a E) = True
+checkRBT (T R (T R _ _ _ ) x _) = False 
+checkRBT (T R _ x (T R _ _ _ )) = False					 
+checkRBT rbt@(T _ i x d) =  (checkRBT i) && (checkRBT d) && (checkBlackHeight rbt)
+
+checkBlackHeight E = True
+checkBlackHeight (T c i x d) = (getBlackHeightI i) == (getBlackHeightD d) 
+
+getBlackHeightI E = 0
+getBlackHeightI (T R i x _) =  0 + (getBlackHeight i)
+getBlackHeightI (T B i x _) =  1 + (getBlackHeight i)
+
+getBlackHeightD E = 0
+getBlackHeightD (T R _ x d) =  0 + (getBlackHeight d)
+getBlackHeightD (T B _ x d) =  1 + (getBlackHeight d)
+
+-- -------------------------------------------------
+-- Leftist Heap
+
 
 {-
 -}
