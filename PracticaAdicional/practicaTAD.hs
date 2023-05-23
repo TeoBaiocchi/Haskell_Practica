@@ -144,7 +144,20 @@ f) elimine todos los elementos duplicados en un Leftist Heap y devuelva el nuevo
 g) verifique si un arbol cumple con la propiedad de Red − Black − Tree
 -}
 
+-- BST
 data Bin a = Hoja | Nodo (Bin a) a (Bin a)
+
+delete z (Nodo Hoja b Hoja) | z == b = Hoja
+delete z (Nodo Hoja b r) | z == b = r
+delete z (Nodo l b Hoja) | z == b = l
+delete z (Nodo l b r)
+    | z > b = Nodo (delete z l) b r 
+    | z < b = Nodo l b  (delete z r)
+    | z == b = let y = getMin r in Nodo l y (delete y r) 
+
+getMin (Nodo Hoja x _) = x
+getMin (Nodo l _ _) = getMin l
+
 
 -- a)
 calcular :: Bin -> Int -> Int
@@ -164,12 +177,41 @@ getHeight (Nodo l _ r) = if lHeight <= rHeight then rHeight + 1 else lHeight + 1
 							where 
 							lHeight = getHeight l
 							rHeight = getHeight r
- 
+  
 balanced Hoja = True
 balanced (Nodo l c r) = abs(getHeight l - getHeight r) <= 1 && (balanced l) && (balanced r)
-                          
+-- -------------------------------
+
+
+--RBT
+data Color = R | B
+data RBT a = E | T Color (RBT a) a (RBT a)
+
+memberRBT :: Ord a ⇒ a → RBT a → Bool
+memberRBT a E = False
+memberRBT a (T l b r) | a ≡ b = True
+				      | a < b = memberRBT a l
+                      | a > b = memberRBT a r
+
+insert :: Ord a => a -> RBT a -> RBT a
+insert x t = makeBlack (ins x t)
+			 where ins x E = T R E x E
+			
+ins x (T c l y r) | x < y = balance c (ins x l) y r
+				  | x > y = balance c l y (ins x r)
+                  | otherwise = T c l y r
+makeBlack E = E
+makeBlack (T l x r) = T B l x r
+
+balance :: Color → RBT a → a → RBT a → RBT a
+balance B (T R (T R a x b) y c) z d = T R (T B a x b) y (T B c z d)
+balance B (T R a x (T R b y c)) z d = T R (T B a x b) y (T B c z d)
+balance B a x (T R (T R b y c) z d) = T R (T B a x b) y (T B c z d)
+balance B a x (T R b y (T R c z d)) = T R (T B a x b) y (T B c z d)
+balance c l a r = T c l a r
 
 {-
 -}
+
 
 

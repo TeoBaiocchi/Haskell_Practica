@@ -95,6 +95,14 @@ e) Definir una funci´on concatCL que toma una CList de CList y devuelve la CLis
 concatenadas
 -}
 
+--1 2 3 4
+--consnoc 1 (consnoc 2 empty 3 ) 4
+--1 2 3 4 5
+--consnoc 1 (consnoc 2 CUnit 3 4) 5
+
+-- 1 2 3 4 1 2 3 4 5
+
+-- (consnoc 1 (consnoc 2 (consnoc 3 (consnoc 4 (CUnit 1) 2) 3) 4) 5)
 data CList a = EmptyCL | CUnit a | Consnoc a (CList a) a
 
 HeadCL :: CList a -> a
@@ -116,14 +124,21 @@ isCUnit CUnit _ = True
 isCUnit _ = False
 
 --b)
+reverseCL :: CList a -> CList a
 reverseCL EmptyCL = EmptyCL
 reverseCL (CUnit x) = (CUnit x)
 reverseCL (Consnoc x list y) = (Consnoc y (reverseCL list) x)
 
---1 2 3 4
---consnoc 1 (consnoc 2 empty 3 ) 4
---1 2 3 4 5
---consnoc 1 (consnoc 2 CUnit 3 4) 5
+
+--e)
+concatCL :: CList (Clist a) -> CList a
+concatCL EmptyCL = EmptyCL 
+concatCL (CUnit x) = x
+concatCL (Consnoc clist_izq centro clist_der) = (Consnoc 
+												(headCL (headCL clist_izq)) --asi accederia al valor en cuestion de la lista dentro de la lista 
+												(Consnoc (concatCL (tailCL clist_izq)) (concatCL centro) (headCL clist_der))  
+												(ConcatCL (tailCL clist_der))		
+												)
 {-
 4. Dado el siguiente tipo algebraico:
 data Aexp = Num Int | Prod Aexp Aexp | Div Aexp Aexp
@@ -152,3 +167,26 @@ multiplicar Num x = Just x
 multiplicar (Just x) (Just y) =  (Just (x*y))
 multiplicar _ _ = Nothing
 
+{-7. La definicion de member dada en teor´ıa (la cual determina si un elemento esta en un bst)
+realiza en el peor caso 2 * d comparaciones, donde d es la altura del arbol. Dar una definicion
+de menber que realice a lo sumo d + 1 comparaciones. Para ello definir member en terminos de
+una funcion auxiliar que tenga como parametro el elemento candidato, el cual puede ser igual al
+elemento que se desea buscar (por ejemplo, el ´ultimo elemento para el cual la comparacion de
+a menor igual b retorno True) y que chequee que los elementos son iguales solo cuando llega a una hoja del arbol
+-}
+
+member :: Eq a => a -> Bin a -> Bool
+member a Hoja = False
+member a (Nodo l b r ) = a == b ∨ member a l ∨ member a r
+
+memberRedux :: Eq a => a -> Bin a -> Bool
+memberRedux a Hoja = False
+memberRedux a (Nodo l b r) | a < b = (member a l)
+						   | a > b = (member a r)
+						   | a == b = True
+						  
+memberRedux2 ::Eq a => a -> Bin a -> Bool
+memberRedux2 _ Hoja = False
+memberRedux2 a (Nodo l b r) = memberAux a (Nodo l b r)
+						   
+memberAux original (Nodo l nuevo r) = 						   

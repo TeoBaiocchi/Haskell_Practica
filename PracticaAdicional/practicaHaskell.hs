@@ -129,10 +129,38 @@ si es el producto de dos naturales consecutivos. Por ejemplo, los números [2, 6
 oblongoNumber :: Int -> [Int]
 oblongoNumber x = [(y*(y+1)) | y <- [0..x]]
 
+{-
+c) abundantes :: [Integer] que es la lista de todos los números abundantes. Un número natural
+n se denomina abundante si es menor que la suma de sus divisores propios. Por ejemplo, 12
+y 30 son abundantes pero 5 y 28 no lo son. Por ejemplo abundates = [12, 18, 20, 24, 30, 36, ...
+-}
+
+abundantes :: [Int]
+abundantes = [x | x <- [1..], (sum (divisoresDeUnEnteroDado x)) > x]
+
+divisoresDeUnEnteroDado :: Int -> [Int]             
+divisoresDeUnEnteroDado x = [y | y <- [1..x-1], (mod x y) == 0]
+
+abundantesConTope :: Int -> [Int]
+abundantesConTope y = [x | x <- [1..y], (sum (divisoresDeUnEnteroDado x)) > x]
+
+{-
+e) euler :: Int → Int tal que euler n es la suma de todos los múltiplos de 3 ó 5 menores que n.
+Por ejemplo, euler 10 = 23. Puedes usar sin definir la función sum que suma los elementos
+de una lista.
+-}
+
+euler :: Int -> Int
+euler x = (sum (g x 3)) + (sum (g x 5))
+        where g x y = [z| z <- [1..x-1], (mod z y) == 0]
+--euler x = (sum [y| y <- [1..x], (mod y 3) == 0]) + ([z| z <- [1..x], (mod z 5) == 0])   
+
 
 -- Eco, de nuevo. Dato, existe repeat...
 ecoComp :: [Char] -> [Char]
 ecoComp xs = [z | (x, y) <- (zip xs [1..]), (z, w) <- (zip (repeat x) [1..y])]
+
+
 
 
 {-
@@ -147,15 +175,33 @@ ejA1 f = let usarEnCero x = if x then f 0 == 0 else False
          in usarEnCero 
 
 --b) Bool → (Int → Bool)
--- ejB :: Bool -> (Int -> Bool)
- 
+ejB :: Bool -> (Int -> Bool)
+ejB b = g 
+        where g x = (x < 0)
+
+ejB2 :: Bool -> (Int -> Bool)
+ejB2 bul = let g x = if x == 0 then bul else False in g   
 
 --c) Char → Char
 ejC :: Char -> Char
 ejC a = a
 
+ejC2 :: Char -> Char
+ejC2 a = head (a : "Hola mundo!")
+
+ejC3 :: Char -> Char
+ejC3 'h' = 'o'
+ejC3 'l' = 'a'
+ejC3 'm' = 'u'
+ejC3 'n' = 'd'
+ejC3 'o' = '!'
+ejC3 a = a
+
 --d) Int → (Int → Bool) → [Int]
 --e) [a ] → (a → [b ]) → [b ]
+
+ejE :: [a] -> (a -> [b]) -> [b]
+ejE ::  -> 
 --f ) [[a ]] → (a → Bool) → [a ]
 --g) (a, b, c) → Bool
 --h) (a, b, c) → Int → c
