@@ -180,6 +180,20 @@ getHeight (Nodo l _ r) = if lHeight <= rHeight then rHeight + 1 else lHeight + 1
   
 balanced Hoja = True
 balanced (Nodo l c r) = abs(getHeight l - getHeight r) <= 1 && (balanced l) && (balanced r)
+
+encontrarSusPre :: a -> Bin a -> (Maybe a, Maybe a)
+encontrarSusPre x H = (Nothing, Nothing)
+encontrarSusPre x t = (devolverTupla x (binToList t))
+
+devolverTupla w [x] = (Nothing, Nothing)
+devolverTupla w (x:y:z:xs) | w == y = (x, z)
+                           | otherwise = (devolverTupla y:z:xs)
+
+binToList :: Bin a -> [a]
+binToList H = []
+binToList (N H x H) = [x]
+binToList (N i x d) = (binToList i) ++ [x] ++ (binToList d)
+                           
 -- -------------------------------
 
 
@@ -187,9 +201,9 @@ balanced (Nodo l c r) = abs(getHeight l - getHeight r) <= 1 && (balanced l) && (
 data Color = R | B
 data RBT a = E | T Color (RBT a) a (RBT a)
 
-memberRBT :: Ord a ⇒ a → RBT a → Bool
+memberRBT :: Ord a => a -> RBT a -> Bool
 memberRBT a E = False
-memberRBT a (T l b r) | a ≡ b = True
+memberRBT a (T l b r) | a == b = True
 				      | a < b = memberRBT a l
                       | a > b = memberRBT a r
 
@@ -200,9 +214,9 @@ insert x t = makeBlack (ins x t)
 				                     | x > y = balance c l y (ins x r)
                                      | otherwise = T c l y r
 makeBlack E = E
-makeBlack (T l x r) = T B l x r
+makeBlack (T _ l x r) = T B l x r
 
-balance :: Color → RBT a → a → RBT a → RBT a
+balance :: Color -> RBT a -> a -> RBT a -> RBT a
 balance B (T R (T R a x b) y c) z d = T R (T B a x b) y (T B c z d)
 balance B (T R a x (T R b y c)) z d = T R (T B a x b) y (T B c z d)
 balance B a x (T R (T R b y c) z d) = T R (T B a x b) y (T B c z d)
@@ -229,7 +243,50 @@ getBlackHeightD (T B _ x d) =  1 + (getBlackHeight d)
 -- -------------------------------------------------
 -- Leftist Heap
 
+type Rank = Int
+data Heap a = E | N Rank a (Heap a) (Heap a)
 
+rank :: Heap a -> Rank
+rank E = 0
+rank (N r _ _ _) = r
+
+merge :: Ord a => Heap a -> Heap a -> Heap a
+merge h1 E = h1
+merge E h2 = h2
+merge h1@(N _ x a1 b1) h2@(N _ y a2 b2) =
+								if x <= y then makeH x a1 (merge b1 h2)
+										  else makeH y a2 (merge h1 b2)
+
+makeH x a b = if rank a > rank b then N (rank b + 1) x a b
+				                 else N (rank a + 1) x b a
+
+insert :: Ord a => a -> Heap a -> Heap a
+insert x h = merge (N 1 x E E) h
+
+findMin :: Ord a => Heap a -> a
+findMin (N x a b) = x
+
+deleteMin :: Ord a => Heap a -> Heap a
+deleteMin (N x a b) = merge a b
+
+--MAYOR a menor
+leftHeapToList :: Heap a -> [a]
+leftHeapToList E = []
+leftHeapToList heap = (leftHeapToList (deletemin heap)) ++ [findMin heap]
+
+checkLeftistHeap :: Heap a -> Bool
+checkLeftistHeap E = True
+checkLeftistHeap (N rango x i d) | x > (findMin i) = False
+                                 | x > (findMin d) = False
+                                 | (rank i) < (rank d) = False
+                                 | otherwise = (checkLeftistHeap i) && (checkLeftistHeap d)
+
+eliminarDupes :: Heap a -> Heap a
+eliminarDupes E = E
+eliminarDupes (N r x i d) | x == 
+                      
+                                  
+                                 
 {-
 -}
 

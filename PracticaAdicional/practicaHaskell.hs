@@ -1,8 +1,4 @@
 {-
-
-
-
-{-
 1) Definir las siguientes funciones en forma recursiva:
 
 a) borrarUltimo que dada una lista borra el ´ultimo elemento de la lista. 
@@ -107,7 +103,6 @@ ecoLet x = let ecoAux 0 _ = []
             in ecoFin 1 x
 
 
--}
 {-
 2. Definir usando listas por comprensión las funciones:
 
